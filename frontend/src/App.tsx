@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { useState } from 'react'
 
-const API_KEY = ''
-const API_URL = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}`
+const GIPHY_API_KEY = ''
+const GIPHY_API_URL = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}`
 const ITEMS_PER_PAGE = 25
+const API_URL = 'http://localhost:3000/search'
 
 export function ImagePreview({ url }: { url: string }) {
   return (<img src={url} />)
@@ -12,18 +13,27 @@ export function ImagePreview({ url }: { url: string }) {
 export function App() {
   const [foundImages, setFoundImages] = useState([])
   const [offset, setOffset] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const searchApi = async (term = '', offset = 0) => {
-    const { data } = await axios.get(`${API_URL}&limit=${ITEMS_PER_PAGE}&offset=${offset}&q=${term}`)
+    const { data } = await axios.get(`${GIPHY_API_URL}&limit=${ITEMS_PER_PAGE}&offset=${offset}&q=${term}`)
     return data
   }
 
-  const getTerm = () => (document.getElementById('search-input') as HTMLInputElement)?.value || ''
+  const getTerm = () => (document.getElementById('search-input') as HTMLInputElement)?.value?.trim() || ''
+
+  const saveSearch = async (term = searchTerm) => {
+    await axios.post(API_URL, { searchTerm: term })
+  }
 
   const handleSearch = async () => {
     const term = getTerm()
     const { data } = await searchApi(term)
     setFoundImages(_ => data)
+    if (term !== searchTerm) {
+      await saveSearch(term)
+      setSearchTerm(term)
+    }
   }
 
   const handleLoadMore = async () => {
