@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 
-const API_KEY = 'pLURtkhVrUXr3KG25Gy5IvzziV5OrZGa'
+const API_KEY = ''
 const API_URL = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}`
 const ITEMS_PER_PAGE = 25
 
