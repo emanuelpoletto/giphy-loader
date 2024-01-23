@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import bodyParser from 'body-parser';
 import express from 'express';
 import sqlite3 from 'sqlite3';
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
@@ -13,6 +14,9 @@ db.serialize(() => {
   db.run('CREATE TABLE search_history (id TEXT, term TEXT, created_at DATETIME)');
 });
 
+app.use(cors({
+  origin: '*',
+}))
 app.use(bodyParser.json());
 
 app.get('/search', (_req, res) => {
