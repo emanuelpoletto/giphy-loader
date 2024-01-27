@@ -14,9 +14,7 @@ db.serialize(() => {
   db.run('CREATE TABLE search_history (id TEXT, term TEXT, created_at DATETIME)');
 });
 
-app.use(cors({
-  origin: '*',
-}))
+app.use(cors())
 app.use(bodyParser.json());
 
 app.get('/search', (_req, res) => {

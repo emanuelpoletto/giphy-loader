@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 
-const GIPHY_API_KEY = ''
+const GIPHY_API_KEY = import.meta.env.VITE_GIPHY_API_KEY || ''
 const GIPHY_API_URL = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}`
 const ITEMS_PER_PAGE = 25
 const API_URL = 'http://localhost:3000/search'
@@ -11,7 +11,7 @@ export function ImagePreview({ url }: { url: string }) {
 }
 
 export function App() {
-  const [foundImages, setFoundImages] = useState([])
+  const [foundImages, setFoundImages] = useState([] as any[])
   const [offset, setOffset] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -20,7 +20,9 @@ export function App() {
     return data
   }
 
-  const getTerm = () => (document.getElementById('search-input') as HTMLInputElement)?.value?.trim() || ''
+  const getSearchInputElement = () => (document.getElementById('search-input') as HTMLInputElement)
+
+  const getTerm = () => getSearchInputElement().value?.trim() || ''
 
   const saveSearch = async (term = searchTerm) => {
     await axios.post(API_URL, { searchTerm: term })
@@ -46,7 +48,8 @@ export function App() {
 
   const resetSearch = () => {
     setFoundImages([])
-    setOffset(0)
+    setOffset(0);
+    getSearchInputElement().value = ''
   }
 
   return (
